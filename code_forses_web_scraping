@@ -1,0 +1,21 @@
+from urllib.request import urlopen
+from bs4 import BeautifulSoup as bs
+cf_url = "https://codeforces.com/problemset/page/"
+fromPage = 1
+toPage = 2
+data = {}
+for page in range(fromPage,toPage+1):
+    cf_response = urlopen(cf_url+str(page))
+    cf_page = bs(cf_response.read(), 'html.parser')
+    problems = cf_page.find('table', class_="problems")
+    style = "float: right; font-size: 1.1rem; padding-top: 1px; text-align: right;"
+    names = problems.findAll('div', style=style)
+    for name in names:
+        val = name.find('a').text.strip();
+        if(val in data.keys()):
+            data[val] += 1
+        else: 
+            data.update({val: 1})
+
+for(key,value)in data.items():
+    print("{} : {}".format(key,value))
